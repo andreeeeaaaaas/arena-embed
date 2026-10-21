@@ -1,4 +1,4 @@
-# Are.na Embed
+# arenaview
 
 > An Obsidian plugin that renders an Are.na channel as a live image grid inside a note, for one person collecting visual references.
 
@@ -67,7 +67,7 @@ On both Mac and iPhone, an `arena` block pointing at a private channel renders t
 | State | In-memory cache, optionally device-local storage | Never `data.json`, never the vault |
 | Data | Are.na REST API v3 (`https://api.are.na`) | `GET /v3/channels/{id}/contents` |
 | Auth | Are.na personal access token, `read` scope | Stored in plugin settings; optional for public channels |
-| Distribution | Manual install into `.obsidian/plugins/arena-embed/`, synced by iCloud | Source in a public GitHub repo (changed from private on 2026-10-20) |
+| Distribution | Manual install into `.obsidian/plugins/arenaview/`, synced by iCloud | Source in a public GitHub repo (changed from private on 2026-10-20) |
 | Package manager | npm | |
 
 **Pinned versions**

@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Obsidian plugin (`arena-embed`) that renders an Are.na channel as a live masonry image grid from an `arena` code block. Display-only: nothing is written to the vault.
+Obsidian plugin `arenaview` (named 2026-10-21; earlier Are.na Viewer, then Are.na Embed) that renders an Are.na channel as a live masonry image grid from an `arena` code block. Display-only: nothing is written to the vault.
 
 `BRD.md` is the source of truth and overrides general conventions. Read it before changing behaviour. Locked Choices, Rules, and Not Doing are binding; if a decision isn't covered and is expensive to reverse, stop and ask, and update the BRD before coding against a changed decision.
 
@@ -16,7 +16,7 @@ There is no linter and no test suite; the BRD rules out tests beyond manual chec
 
 ## Release
 
-Keep `version` in sync in `manifest.json` and `package.json`. Releases are `releases/arena-embed-<version>.zip` containing an `arena-embed/` folder with `main.js`, `manifest.json`, and `styles.css`. `main.js` and `releases/` are build output and gitignored.
+Keep `version` in sync in `manifest.json` and `package.json`. Releases are `releases/arenaview-<version>.zip` containing an `arenaview/` folder with `main.js`, `manifest.json`, and `styles.css`, and a GitHub release `<version>` with those three files attached (`gh release create`). `main.js` and `releases/` are build output and gitignored.
 
 ## Architecture
 

@@ -119,7 +119,7 @@ export class ArenaClient {
       this.blockedUntil = Number.isFinite(reset) && reset > Date.now() ? reset : Date.now() + 60_000;
       throw this.rateLimitError();
     }
-    if (response.status === 401) throw new ArenaError('Add or update your personal access token in Are.na Embed settings.');
+    if (response.status === 401) throw new ArenaError('Add or update your personal access token in arenaview settings.');
     if (response.status === 403 || response.status === 404) {
       this.cache.delete(key);
       throw new ArenaError('This channel could not be opened. Check its URL and your token’s access.');

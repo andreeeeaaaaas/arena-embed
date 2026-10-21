@@ -1,7 +1,8 @@
 {
-  "name": "arena-embed",
-  "version": "0.1.16",
+  "name": "arenaview",
+  "version": "0.1.17",
   "private": true,
+  "license": "MIT",
   "description": "Live Are.na image grids in Obsidian notes",
   "main": "main.js",
   "type": "module",

@@ -1,4 +1,4 @@
-# Are.na Embed
+# arenaview
 
 An Obsidian plugin that displays an Are.na channel as a live masonry image grid. Image, Link, Embed, and Attachment blocks appear when they have an available preview image. Images remain remote; the plugin creates no vault attachments.
 
@@ -15,15 +15,15 @@ The TypeScript and esbuild setup is adapted from the [official Obsidian sample p
 
 ## Install
 
-Copy `main.js`, `manifest.json`, and `styles.css` into your vault's `.obsidian/plugins/arena-embed/` directory. Reload Obsidian and enable **Are.na Embed** in Community plugins. The release ZIP contains the `arena-embed/` folder ready to copy.
+Download `main.js`, `manifest.json`, and `styles.css` from the [latest release](https://github.com/andreeeeaaaaas/arenaview/releases/latest) (or build them) and copy them into your vault's `.obsidian/plugins/arenaview/` directory. Reload Obsidian and enable **arenaview** in Community plugins.
 
-For a private channel, open the plugin settings, paste an Are.na personal access token with `read` scope, and click **Save**. The token is saved in the plugin's `data.json`. If your vault is versioned in Git, add `.obsidian/plugins/arena-embed/data.json` to the vault's `.gitignore` before entering a token. The source repository's ignore rule does not change your vault's Git configuration.
+For a private channel, open the plugin settings, paste an Are.na personal access token with `read` scope, and click **Save**. The token is saved in the plugin's `data.json`. If your vault is versioned in Git, add `.obsidian/plugins/arenaview/data.json` to the vault's `.gitignore` before entering a token. The source repository's ignore rule does not change your vault's Git configuration.
 
 When the plugin folder syncs to iPhone through iCloud, enable it there too if necessary.
 
 ## Embed a channel
 
-Run **Are.na Embed: Embed channel** from the command palette, paste a channel URL, optionally set a **Count** (1–100) and **View**, and select **Insert embed**. Or enter a block directly:
+Run **arenaview: Embed channel** from the command palette, paste a channel URL, optionally set a **Count** (1–100) and **View**, and select **Insert embed**. Or enter a block directly:
 
 ````markdown
 ```arena
@@ -82,3 +82,7 @@ Still required in actual Obsidian on Mac and iPhone:
 - Confirm plugin installation and settings sync through iCloud.
 
 Headless Chrome checks do not establish compatibility with iOS WebKit or Obsidian's rendering lifecycle.
+
+## License
+
+[MIT](LICENSE)
