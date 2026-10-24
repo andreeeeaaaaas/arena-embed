@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Obsidian plugin `arenaview` (named 2026-10-21; earlier Are.na Viewer, then Are.na Embed) that renders an Are.na channel as a live masonry image grid from an `arena` code block. Display-only: nothing is written to the vault.
+Obsidian plugin Are.na Tools, id `arena-tools` (named 2026-10-24; earlier Are.na Viewer, Are.na Embed, then arenaview) that renders an Are.na channel as a live masonry image grid from an `arena` code block. Display-only: nothing is written to the vault.
 
 `BRD.md` is the source of truth and overrides general conventions. Read it before changing behaviour. Locked Choices, Rules, and Not Doing are binding; if a decision isn't covered and is expensive to reverse, stop and ask, and update the BRD before coding against a changed decision.
 
@@ -16,12 +16,12 @@ There is no linter and no test suite; the BRD rules out tests beyond manual chec
 
 ## Release
 
-Keep `version` in sync in `manifest.json` and `package.json`. Releases are `releases/arenaview-<version>.zip` containing an `arenaview/` folder with `main.js`, `manifest.json`, and `styles.css`, and a GitHub release `<version>` with those three files attached (`gh release create`). `main.js` and `releases/` are build output and gitignored.
+Keep `version` in sync in `manifest.json` and `package.json`. Releases are `releases/arena-tools-<version>.zip` containing an `arena-tools/` folder with `main.js`, `manifest.json`, and `styles.css`, and a GitHub release `<version>` with those three files attached (`gh release create`). `main.js` and `releases/` are build output and gitignored.
 
 ## Architecture
 
 - `src/main.ts`: plugin entry. Registers the `arena` code block processor, the "Embed channel" command (`InsertChannelModal`), and the token settings tab. Tracks live `ChannelEmbed`s so a token change can unload them and clear visible private content. `saveCount` rewrites only the block's `count:` line via `getSectionInfo` + `vault.process`, refusing if the block moved; a successful save makes Obsidian re-render the embed, so the embed first stores a `Snapshot` in `handoffs` (keyed by note, channel and count, 10s expiry) that the new instance restores without fetching.
-- `src/channel.ts`: pure parsing. `parseEmbed` accepts one channel line (slug, URL, optionally prefixed `channel:`) plus optional `count:` (1–100; `per:` is a legacy alias). An explicit count switches the embed to Shuffle mode; otherwise Load more with 24 per page. `embedMarkdown` builds the block the modal inserts.
+- `src/channel.ts`: pure parsing. `parseEmbed` accepts one channel line (slug, URL, optionally prefixed `channel:`) plus optional `count:` (1–100; `per:` is a legacy alias). An explicit count switches the embed to Shuffle mode; otherwise Load more with 24 per page. `embedMarkdown` builds the block the modal inserts; the modal writes `width:` only when it differs from the Wide embeds setting.
 - `src/api.ts`: `ArenaClient`, a single instance shared by all embeds.
   - Cache key is `channel:page:per`; in-memory only, max 100 entries, FIFO eviction.
   - Concurrent identical requests share one promise via `pending`.

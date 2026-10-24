@@ -1,4 +1,4 @@
-# arenaview
+# Are.na Tools
 
 An Obsidian plugin that displays an Are.na channel as a live masonry image grid. Image, Link, Embed, and Attachment blocks appear when they have an available preview image. Images remain remote; the plugin creates no vault attachments.
 
@@ -15,15 +15,15 @@ The TypeScript and esbuild setup is adapted from the [official Obsidian sample p
 
 ## Install
 
-Download `main.js`, `manifest.json`, and `styles.css` from the [latest release](https://github.com/andreeeeaaaaas/arenaview/releases/latest) (or build them) and copy them into your vault's `.obsidian/plugins/arenaview/` directory. Reload Obsidian and enable **arenaview** in Community plugins.
+Download `main.js`, `manifest.json`, and `styles.css` from the [latest release](https://github.com/andreeeeaaaaas/arena-tools/releases/latest) (or build them) and copy them into your vault's `.obsidian/plugins/arena-tools/` directory. Reload Obsidian and enable **Are.na Tools** in Community plugins.
 
-For a private channel, open the plugin settings, paste an Are.na personal access token with `read` scope, and click **Save**. The token is saved in the plugin's `data.json`. If your vault is versioned in Git, add `.obsidian/plugins/arenaview/data.json` to the vault's `.gitignore` before entering a token. The source repository's ignore rule does not change your vault's Git configuration.
+For a private channel, open the plugin settings, paste an Are.na personal access token with `read` scope, and click **Save**. The token is saved in the plugin's `data.json`. If your vault is versioned in Git, add `.obsidian/plugins/arena-tools/data.json` to the vault's `.gitignore` before entering a token. The source repository's ignore rule does not change your vault's Git configuration.
 
 When the plugin folder syncs to iPhone through iCloud, enable it there too if necessary.
 
 ## Embed a channel
 
-Run **arenaview: Embed channel** from the command palette, paste a channel URL, optionally set a **Count** (1–100) and **View**, and select **Insert embed**. Or enter a block directly:
+Run **Are.na Tools: Embed channel** from the command palette, paste a channel URL (or select one in the note first), optionally set a **View**, **Count** (1–100) and **Width**, and select **Insert**. Or enter a block directly:
 
 ````markdown
 ```arena

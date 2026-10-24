@@ -1,6 +1,6 @@
 {
-  "name": "arenaview",
-  "version": "0.1.17",
+  "name": "arena-tools",
+  "version": "0.1.18",
   "private": true,
   "license": "MIT",
   "description": "Live Are.na image grids in Obsidian notes",

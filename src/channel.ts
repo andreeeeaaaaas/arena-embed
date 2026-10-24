@@ -61,10 +61,11 @@ export function parseEmbed(source: string): EmbedOptions {
   };
 }
 
-export function embedMarkdown(input: string, count?: number, view: View = 'masonry'): string {
+export function embedMarkdown(input: string, count?: number, view: View = 'masonry', width?: 'wide' | 'normal'): string {
   parseChannel(input);
   if (count !== undefined) parseCount(String(count));
   return '```arena\nchannel: ' + input.trim().replace(/^channel:\s*/, '')
     + (count === undefined ? '' : '\ncount: ' + count)
-    + (view === 'masonry' ? '' : '\nview: ' + view) + '\n```';
+    + (view === 'masonry' ? '' : '\nview: ' + view)
+    + (width === undefined ? '' : '\nwidth: ' + width) + '\n```';
 }

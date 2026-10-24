@@ -1,6 +1,6 @@
 import { App, Modal, Plugin, PluginSettingTab, Setting, TFile, type Editor, type MarkdownPostProcessorContext } from 'obsidian';
 import { ArenaClient } from './api';
-import { embedMarkdown, parseCount, parseEmbed } from './channel';
+import { embedMarkdown, parseChannel, parseCount, parseEmbed } from './channel';
 import { VIEWS, type View } from './layouts';
 import { ChannelEmbed, type Snapshot } from './embed';
 import { Lightbox } from './lightbox';
@@ -23,7 +23,7 @@ export default class ArenaPlugin extends Plugin {
     this.addSettingTab(new ArenaSettingsTab(this.app, this));
     this.addCommand({
       id: 'embed-channel', name: 'Embed channel',
-      editorCallback: (editor: Editor) => { new InsertChannelModal(this.app, editor).open(); },
+      editorCallback: (editor: Editor) => { new InsertChannelModal(this.app, editor, this.settings.wide).open(); },
     });
     this.registerMarkdownCodeBlockProcessor('arena', (source, el, context) => {
       try {
@@ -111,30 +111,71 @@ function handoffKey(sourcePath: string, channel: string, count?: number): string
 }
 
 class InsertChannelModal extends Modal {
-  constructor(app: App, private editor: Editor) { super(app); }
+  constructor(app: App, private editor: Editor, private wideByDefault: boolean) { super(app); }
 
   onOpen(): void {
     this.titleEl.setText('Embed an Are.na channel');
     const form = this.contentEl.createEl('form', { cls: 'arena-insert-form' });
-    const label = form.createEl('label', { text: 'Channel URL' });
-    const input = label.createEl('input', {
-      attr: { type: 'text', placeholder: 'https://www.are.na/username/channel', autocomplete: 'off', spellcheck: 'false' },
-    });
-    const countLabel = form.createEl('label', { text: 'Count (optional)' });
-    const countInput = countLabel.createEl('input', {
-      attr: { type: 'number', min: '1', max: '100', step: '1', placeholder: '1–100', inputmode: 'numeric' },
-    });
-    const viewLabel = form.createEl('label', { text: 'View' });
-    const viewSelect = viewLabel.createEl('select', { cls: 'dropdown' });
+    // A selected channel URL is the likely target; inserting replaces it with the block.
+    const selection = this.editor.getSelection().trim();
+    let selected = '';
+    try { parseChannel(selection); selected = selection; } catch { /* not a channel */ }
+
+    let input!: HTMLInputElement;
+    new Setting(form).setName('Channel').setDesc('Paste a channel URL or slug.').setClass('arena-channel-setting')
+      .addText(text => {
+        input = text.inputEl;
+        text.setPlaceholder('https://www.are.na/username/channel').setValue(selected);
+        input.autocomplete = 'off';
+        input.spellcheck = false;
+      });
+
     const viewNames: Record<View, string> = { masonry: 'Masonry', filmstrip: 'Filmstrip', 'contact-sheet': 'Contact sheet', pinboard: 'Pinboard' };
-    for (const view of VIEWS) viewSelect.createEl('option', { text: viewNames[view], attr: { value: view } });
-    form.createDiv({ cls: 'arena-status', text: 'Set a count to enable Shuffle. Leave blank for Load more, with 24 items per page.' });
+    const viewDescs: Record<View, string> = {
+      masonry: 'Columns of images at their own proportions.',
+      filmstrip: 'One row that scrolls sideways.',
+      'contact-sheet': 'A dense grid of square crops.',
+      pinboard: 'Loosely scattered prints you can drag.',
+    };
+    let view: View = 'masonry';
+    const viewSetting = new Setting(form).setName('View').setDesc(viewDescs[view])
+      .addDropdown(dropdown => {
+        for (const name of VIEWS) dropdown.addOption(name, viewNames[name]);
+        dropdown.setValue(view).onChange(value => { view = value as View; viewSetting.setDesc(viewDescs[view]); });
+      });
+
+    let countInput!: HTMLInputElement;
+    new Setting(form).setName('Count')
+      .setDesc('Leave blank to show 24 at a time with Load more. Enter a number to show that many random images with Shuffle.')
+      .addText(text => {
+        countInput = text.inputEl;
+        text.setPlaceholder('1–100');
+        Object.assign(countInput, { type: 'number', min: '1', max: '100', step: '1', inputMode: 'numeric' });
+      });
+
+    let wide = false;
+    new Setting(form).setName('Width').setDesc('Wide extends past the readable line width.')
+      .addDropdown(dropdown => dropdown
+        .addOption('normal', 'Normal')
+        .addOption('wide', 'Wide')
+        .setValue('normal')
+        .onChange(value => { wide = value === 'wide'; }));
+
     const status = form.createDiv({ cls: 'arena-status', attr: { role: 'alert' } });
-    form.createEl('button', { text: 'Insert embed', cls: 'mod-cta', attr: { type: 'submit' } });
+    const buttons = form.createDiv({ cls: 'modal-button-container' });
+    buttons.createEl('button', { text: 'Cancel', attr: { type: 'button' } }).addEventListener('click', () => this.close());
+    buttons.createEl('button', { text: 'Insert', cls: 'mod-cta', attr: { type: 'submit' } });
     form.addEventListener('submit', (event) => {
       event.preventDefault();
+      let field = input;
       try {
-        const block = embedMarkdown(input.value, countInput.value.trim() ? parseCount(countInput.value) : undefined, viewSelect.value as View);
+        parseChannel(input.value);
+        field = countInput;
+        const count = countInput.value.trim() ? parseCount(countInput.value) : undefined;
+        // Write a width line only when the choice differs from the setting, so the
+        // embed renders as chosen without pinning blocks that match the default.
+        const width = wide === this.wideByDefault ? undefined : wide ? 'wide' : 'normal';
+        const block = embedMarkdown(input.value, count, view, width);
         const from = this.editor.getCursor('from');
         const to = this.editor.getCursor('to');
         const before = from.ch > 0 ? '\n\n' : '';
@@ -143,10 +184,10 @@ class InsertChannelModal extends Modal {
         this.close();
       } catch (error) {
         status.setText(error instanceof Error ? error.message : 'Enter a valid channel URL.');
-        input.focus();
+        field.focus();
       }
     });
-    input.focus();
+    (selected ? countInput : input).focus();
   }
 
   onClose(): void { this.contentEl.empty(); }
