@@ -21,7 +21,7 @@ Keep `version` in sync in `manifest.json` and `package.json`. Releases are `rele
 ## Architecture
 
 - `src/main.ts`: plugin entry. Registers the `arena` code block processor, the "Embed channel" command (`InsertChannelModal`), and the token settings tab. Tracks live `ChannelEmbed`s so a token change can unload them and clear visible private content. `saveCount` rewrites only the block's `count:` line via `getSectionInfo` + `vault.process`, refusing if the block moved; a successful save makes Obsidian re-render the embed, so the embed first stores a `Snapshot` in `handoffs` (keyed by note, channel and count, 10s expiry) that the new instance restores without fetching.
-- `src/channel.ts`: pure parsing. `parseEmbed` accepts one channel line (slug, URL, optionally prefixed `channel:`) plus optional `count:` (1–100; `per:` is a legacy alias). An explicit count switches the embed to Shuffle mode; otherwise Load more with 24 per page. `embedMarkdown` builds the block the modal inserts; the modal writes `width:` only when it differs from the Wide embeds setting.
+- `src/channel.ts`: pure parsing. `parseEmbed` accepts one channel line (slug, URL, optionally prefixed `channel:`) plus optional `count:` (1–100; `per:` is a legacy alias). An explicit count switches the embed to Shuffle mode; otherwise Load more with 24 per page. `embedMarkdown` builds the block the modal inserts; the modal writes `width:` only when it differs from the Default width setting.
 - `src/api.ts`: `ArenaClient`, a single instance shared by all embeds.
   - Cache key is `channel:page:per`; in-memory only, max 100 entries, FIFO eviction.
   - Concurrent identical requests share one promise via `pending`.

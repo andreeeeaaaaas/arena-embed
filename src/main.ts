@@ -1,4 +1,4 @@
-import { App, Modal, Plugin, PluginSettingTab, Setting, TFile, type Editor, type MarkdownPostProcessorContext } from 'obsidian';
+import { App, Modal, Plugin, PluginSettingTab, requireApiVersion, Setting, SettingGroup, TFile, type Editor, type MarkdownPostProcessorContext } from 'obsidian';
 import { ArenaClient } from './api';
 import { embedMarkdown, parseChannel, parseCount, parseEmbed } from './channel';
 import { VIEWS, type View } from './layouts';
@@ -196,12 +196,30 @@ class InsertChannelModal extends Modal {
 class ArenaSettingsTab extends PluginSettingTab {
   constructor(app: App, private plugin: ArenaPlugin) { super(app, plugin); }
 
+  // Settings cards with headings need 1.11; older apps get plain heading rows.
+  private group(heading: string): () => Setting {
+    if (requireApiVersion('1.11.0')) {
+      let setting!: Setting;
+      const group = new SettingGroup(this.containerEl).setHeading(heading);
+      return () => { group.addSetting(s => { setting = s; }); return setting; };
+    }
+    new Setting(this.containerEl).setName(heading).setHeading();
+    return () => new Setting(this.containerEl);
+  }
+
   display(): void {
     this.containerEl.empty();
+    const token = this.group('Personal access token');
     let draft = this.plugin.settings.token;
-    new Setting(this.containerEl)
-      .setName('Personal access token')
-      .setDesc('Use a read-scope token for private channels. Leave blank for public channels. Saved in this plugin’s settings and synced with your vault configuration.')
+    let status: HTMLElement;
+    const desc = createFragment(el => {
+      el.appendText('Use a read-scope token for private channels. Leave blank for public channels. Saved in this plugin’s settings and synced with your vault configuration. ');
+      el.createEl('a', { text: 'Create a token on Are.na', href: 'https://www.are.na/settings/oauth' });
+      status = el.createDiv({ cls: 'arena-status', attr: { role: 'status' } });
+    });
+    token()
+      .setName('Token')
+      .setDesc(desc)
       .addText(text => {
         text.inputEl.type = 'password';
         text.inputEl.autocomplete = 'off';
@@ -215,13 +233,16 @@ class ArenaSettingsTab extends PluginSettingTab {
         } catch { status.setText('Could not save settings. Try again.'); }
         finally { button.setDisabled(false); }
       }));
-    const status = this.containerEl.createDiv({ cls: 'arena-status', attr: { role: 'status' } });
-    this.containerEl.createEl('a', { text: 'Create a token on Are.na', href: 'https://www.are.na/settings/oauth' });
-    new Setting(this.containerEl)
-      .setName('Wide embeds')
-      .setDesc('Let embeds extend past the readable line width, so they use more columns and take less height. A block’s width: wide or width: normal line overrides this.')
-      .addToggle(toggle => toggle.setValue(this.plugin.settings.wide).onChange(value => { void this.plugin.saveWide(value); }));
-    new Setting(this.containerEl)
+    const view = this.group('View');
+    view()
+      .setName('Default width')
+      .setDesc('Wide extends embeds past the readable line width, so they use more columns and take less height. A block’s width: line overrides this.')
+      .addDropdown(dropdown => dropdown
+        .addOption('normal', 'Normal')
+        .addOption('wide', 'Wide')
+        .setValue(this.plugin.settings.wide ? 'wide' : 'normal')
+        .onChange(value => { void this.plugin.saveWide(value === 'wide'); }));
+    view()
       .setName('Clicking an image')
       .setDesc('Cmd-click (Ctrl-click on Windows) always opens Are.na.')
       .addDropdown(dropdown => dropdown

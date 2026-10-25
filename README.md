@@ -52,7 +52,7 @@ The first page loads automatically. For embeds without `count:`, **Load more** r
 
 ## Wide embeds
 
-Turn on **Wide embeds** in settings to let every embed extend past Obsidian's readable line width, centred in the note pane. With the Minimal theme it matches Minimal's **wide line width** setting, like wide images and tables; with other themes it is 20% wider than the text. Wider embeds can fit an extra column and take less height. On phones they extend only into the side margins. Add `width: wide` or `width: normal` to a block to override the setting for that embed.
+Set **Default width** to **Wide** in settings to let every embed extend past Obsidian's readable line width, centred in the note pane. With the Minimal theme it matches Minimal's **wide line width** setting, like wide images and tables; with other themes it is 20% wider than the text. Wider embeds can fit an extra column and take less height. On phones they extend only into the side margins. Add `width: wide` or `width: normal` to a block to override the setting for that embed.
 
 ## Cache behavior
 

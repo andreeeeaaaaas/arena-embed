@@ -48,7 +48,7 @@ On both Mac and iPhone, an `arena` block pointing at a private channel renders t
 - `arena` code block processor accepting full channel URLs or slugs
 - Native command to paste a channel URL, choose an optional image count, view and width, and insert an embed
 - Count stepper in the embed toolbar for Shuffle embeds
-- Settings tab (personal access token, wide embeds default, click behaviour)
+- Settings tab (personal access token, default width, click behaviour)
 - Masonry image grid (default view), plus filmstrip, contact sheet and pinboard views chosen per block with `view:`
 - Per-device response cache
 - "Load more" pagination
@@ -126,7 +126,7 @@ Flag and pause on these. Do not assume an answer.
 - Shuffle embeds show a count stepper in the toolbar. A settled change adds or removes only the difference (new images are random and not already shown), then rewrites only that block's `count:` line in its own note, once. The re-render restores the images already shown instead of reloading. If the block can't be located, the count applies to the embed until the note is reopened.
 - Views (chosen 2026-10-19): `masonry` (default), `filmstrip` (one horizontally scrolling row at a fixed height), `contact-sheet` (dense uniform square crops) and `pinboard` (loosely scattered, slightly rotated, overlapping prints, stable per block). Count means the number of images in every view. The insert dialog offers the view.
 - Pinboard prints can be dragged (mouse immediately, touch after a short hold so swipes still scroll). Positions are session only: kept across count re-renders, lost when the note reopens or the grid is shuffled or refreshed. Never stored in the note or `data.json`.
-- Wide layout (2026-10-19): a settings toggle, overridden per block by `width: wide` or `width: normal`, lets an embed extend past the readable line width, centred in the pane. It matches the theme's wide line width (`--line-width-wide`, capped by `--max-width`, as in Minimal), or 1.2× the text width when the theme has none (into the margins only on phones), mirroring Obsidian's Bases embeds. The setting is saved in `data.json`; it changes rarely. The insert dialog (2026-10-24) offers Normal or Wide, starting on Normal, and writes a `width:` line only when the choice differs from the current setting.
+- Wide layout (2026-10-19): a Default width setting (Normal or Wide; a dropdown since 2026-10-25), overridden per block by `width: wide` or `width: normal`, lets an embed extend past the readable line width, centred in the pane. It matches the theme's wide line width (`--line-width-wide`, capped by `--max-width`, as in Minimal), or 1.2× the text width when the theme has none (into the margins only on phones), mirroring Obsidian's Bases embeds. The setting is saved in `data.json`; it changes rarely. The insert dialog (2026-10-24) offers Normal or Wide, starting on Normal, and writes a `width:` line only when the choice differs from the current setting.
 - Shuffle and Refresh replace the grid with one transition: preload the new images while the current tiles dim, fade the old tiles out, then stagger the new tiles in.
 - Channel input accepts a full Are.na URL, either alone or after `channel:`, as well as a slug.
 - Use aspect-ratio placeholders without a BlurHash dependency.

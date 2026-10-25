@@ -1,7 +1,7 @@
 {
   "id": "arena-tools",
   "name": "Are.na Tools",
-  "version": "0.1.18",
+  "version": "0.1.19",
   "minAppVersion": "1.5.0",
   "description": "Embed live Are.na channels as image grids without adding attachments to your vault.",
   "author": "Andreas Thoma",

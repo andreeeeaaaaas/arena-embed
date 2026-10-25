@@ -49,6 +49,8 @@
 .arena-insert-form .arena-channel-setting input { width: 280px; }
 .arena-insert-form input[type="number"] { width: 80px; }
 .arena-insert-form .arena-status:empty { display: none; }
+.setting-item-description .arena-status { margin-block: 6px 0; }
+.setting-item-description .arena-status:empty { display: none; }
 .is-phone .arena-insert-form .arena-channel-setting { flex-wrap: wrap; gap: 8px; }
 .is-phone .arena-insert-form .arena-channel-setting .setting-item-control,
 .is-phone .arena-insert-form .arena-channel-setting input { width: 100%; }
